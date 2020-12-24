@@ -1,0 +1,48 @@
+﻿@model IEnumerable<БИПиТ10.Client>
+
+@{
+    ViewBag.Title = "Client";
+}
+
+<h2>Клиенты</h2>
+@if (User.Identity.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Добавить нового клиента", "Create")
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Client1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phone)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+     {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Client1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <td>
+                    @Html.ActionLink("Редактировать", "Edit", new { id = item.IdC }) |
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.IdC })
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        </tr>
+     }
+
+</table>

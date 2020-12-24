@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AdverstModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Client">
+    <Key>
+      <PropertyRef Name="IdC" />
+    </Key>
+    <Property Name="IdC" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Client" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Phone" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="IdO" />
+    </Key>
+    <Property Name="IdO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdC_FK" Type="int" Nullable="false" />
+    <Property Name="IdS_FK" Type="int" Nullable="false" />
+    <Property Name="Time" Type="int" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="IdS" />
+    </Key>
+    <Property Name="IdS" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Service" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Price" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'adverst.dbo.OrderView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="OrderView">
+    <Key>
+      <PropertyRef Name="IdO" />
+      <PropertyRef Name="Client" />
+      <PropertyRef Name="Service" />
+      <PropertyRef Name="Time" />
+      <PropertyRef Name="Price" />
+      <PropertyRef Name="Date" />
+    </Key>
+    <Property Name="IdO" Type="int" Nullable="false" />
+    <Property Name="Client" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Service" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Time" Type="int" Nullable="false" />
+    <Property Name="Price" Type="int" Nullable="false" />
+    <Property Name="Total" Type="int" />
+    <Property Name="Date" Type="date" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Order_Client">
+    <End Role="Client" Type="Self.Client" Multiplicity="1" />
+    <End Role="Order" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Client">
+        <PropertyRef Name="IdC" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="IdC_FK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Order_Service">
+    <End Role="Service" Type="Self.Service" Multiplicity="1" />
+    <End Role="Order" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Service">
+        <PropertyRef Name="IdS" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="IdS_FK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AdverstModelStoreContainer">
+    <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrderView" EntityType="Self.OrderView" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [OrderView].[IdO] AS [IdO], 
+    [OrderView].[Client] AS [Client], 
+    [OrderView].[Service] AS [Service], 
+    [OrderView].[Time] AS [Time], 
+    [OrderView].[Price] AS [Price], 
+    [OrderView].[Total] AS [Total], 
+    [OrderView].[Date] AS [Date]
+    FROM [dbo].[OrderView] AS [OrderView]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Order_Client" Association="Self.FK_Order_Client">
+      <End Role="Client" EntitySet="Client" />
+      <End Role="Order" EntitySet="Order" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Order_Service" Association="Self.FK_Order_Service">
+      <End Role="Service" EntitySet="Service" />
+      <End Role="Order" EntitySet="Order" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
